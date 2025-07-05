@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>regex test</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <h1>regex test</h1>
+      <p class="sub">paste a pattern, paste some text, see what matches.</p>
+    </header>
+
+    <section class="pattern-row">
+      <div class="pattern-input">
+        <span class="slash">/</span>
+        <input id="pattern" type="text" spellcheck="false" autocomplete="off" placeholder="\b\w+@\w+\.\w+\b" />
+        <span class="slash">/</span>
+        <span id="flags-display" class="flags-display"></span>
+      </div>
+      <div class="flags">
+        <label><input type="checkbox" data-flag="g" checked /> g</label>
+        <label><input type="checkbox" data-flag="i" /> i</label>
+        <label><input type="checkbox" data-flag="m" /> m</label>
+        <label><input type="checkbox" data-flag="s" /> s</label>
+        <label><input type="checkbox" data-flag="u" /> u</label>
+      </div>
+    </section>
+
+    <section class="status">
+      <span id="match-count">0 matches</span>
+      <span id="error" class="error"></span>
+    </section>
+
+    <section class="text-area">
+      <label for="test-string">test string</label>
+      <div class="dual">
+        <div id="highlight" class="highlight" aria-hidden="true"></div>
+        <textarea id="test-string" spellcheck="false">contact me at secan@example.com or hello@roambit.io
+my number is 555-1234 and the year is 2025
+some words: apple Banana CHERRY date123</textarea>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
