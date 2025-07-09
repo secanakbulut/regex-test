@@ -9,6 +9,7 @@ const testEl = document.getElementById('test-string');
 const highlightEl = document.getElementById('highlight');
 const matchCountEl = document.getElementById('match-count');
 const errorEl = document.getElementById('error');
+const groupsEl = document.getElementById('groups');
 
 function getFlags() {
   let f = '';
@@ -39,11 +40,39 @@ function findMatches(re, text) {
   let i = 0;
   let m;
   while ((m = re.exec(text)) !== null) {
-    matches.push({ index: m.index, text: m[0] });
+    matches.push({ index: m.index, text: m[0], groups: m.slice(1) });
     if (m[0].length === 0) re.lastIndex++; // avoid infinite loop on zero-width
     if (++i > 5000) break;
   }
   return matches;
+}
+
+function renderGroups(matches) {
+  if (matches.length === 0) {
+    groupsEl.innerHTML = '<div class="empty">no matches yet</div>';
+    return;
+  }
+  // figure out if there are any groups at all. if not, say so.
+  const hasGroups = matches.some(m => m.groups.length > 0);
+  if (!hasGroups) {
+    groupsEl.innerHTML = '<div class="empty">your pattern has no capture groups. wrap part of it in ( ) to capture.</div>';
+    return;
+  }
+  let html = '';
+  matches.forEach((m, idx) => {
+    html += '<div class="match-block">';
+    html += '<div class="head">match ' + (idx + 1) + ': "' + escapeHtml(m.text) + '"</div>';
+    if (m.groups.length === 0) {
+      html += '<div class="grp">(no groups)</div>';
+    } else {
+      m.groups.forEach((g, gi) => {
+        const val = g === undefined ? '<i>undefined</i>' : '"' + escapeHtml(g) + '"';
+        html += '<div class="grp">group ' + (gi + 1) + ': <b>' + val + '</b></div>';
+      });
+    }
+    html += '</div>';
+  });
+  groupsEl.innerHTML = html;
 }
 
 function renderHighlights(text, matches) {
@@ -74,6 +103,7 @@ function update() {
     errorEl.textContent = err.message;
     matchCountEl.textContent = '0 matches';
     renderHighlights(testEl.value, []);
+    renderGroups([]);
     return;
   }
 
@@ -85,6 +115,7 @@ function update() {
     : matches.length + ' matches';
 
   renderHighlights(text, matches);
+  renderGroups(matches);
 }
 
 // keep the highlight layer scrolled in lockstep with the textarea
@@ -98,5 +129,5 @@ testEl.addEventListener('input', update);
 flagBoxes.forEach(cb => cb.addEventListener('change', update));
 
 // kick it off with a sample pattern so the page isn't dead on load
-patternEl.value = '\\b\\w+@\\w+\\.\\w+\\b';
+patternEl.value = '(\\w+)@(\\w+\\.\\w+)';
 update();

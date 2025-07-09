@@ -180,3 +180,47 @@ mark.match {
   color: transparent;
   border-radius: 2px;
 }
+
+.panels {
+  margin-top: 20px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.panel h2 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin: 0 0 10px;
+  font-weight: 600;
+}
+
+.groups .match-block {
+  border-bottom: 1px dashed var(--border);
+  padding: 8px 0;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.groups .match-block:last-child { border-bottom: none; }
+.groups .match-block .head {
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.groups .match-block .grp {
+  color: var(--muted);
+  margin-left: 12px;
+}
+.groups .match-block .grp b {
+  color: var(--text);
+  font-weight: 500;
+}
+.groups .empty {
+  color: var(--muted);
+  font-style: italic;
+}
