@@ -10,7 +10,7 @@
   <main class="wrap">
     <header>
       <h1>regex test</h1>
-      <p class="sub">paste a pattern, paste some text, see what matches.</p>
+      <p class="sub">paste a pattern, paste some text, see what it matches and why.</p>
     </header>
 
     <section class="pattern-row">
@@ -49,9 +49,18 @@ some words: apple Banana CHERRY date123</textarea>
         <h2>capture groups</h2>
         <div id="groups" class="groups"></div>
       </div>
+      <div class="panel">
+        <h2>what your regex does</h2>
+        <ol id="explainer" class="explainer"></ol>
+      </div>
     </section>
+
+    <footer>
+      <p>vanilla js, no deps. <a href="https://github.com/secanakbulut/regex-test">source</a></p>
+    </footer>
   </main>
 
+  <script src="explainer.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -10,6 +10,7 @@ const highlightEl = document.getElementById('highlight');
 const matchCountEl = document.getElementById('match-count');
 const errorEl = document.getElementById('error');
 const groupsEl = document.getElementById('groups');
+const explainerEl = document.getElementById('explainer');
 
 function getFlags() {
   let f = '';
@@ -47,12 +48,28 @@ function findMatches(re, text) {
   return matches;
 }
 
+function renderHighlights(text, matches) {
+  if (matches.length === 0) {
+    highlightEl.innerHTML = escapeHtml(text) + '\n';
+    return;
+  }
+  let out = '';
+  let cursor = 0;
+  for (const m of matches) {
+    out += escapeHtml(text.slice(cursor, m.index));
+    out += '<mark class="match">' + escapeHtml(m.text) + '</mark>';
+    cursor = m.index + m.text.length;
+  }
+  out += escapeHtml(text.slice(cursor));
+  // trailing newline so the last line gets reserved height
+  highlightEl.innerHTML = out + '\n';
+}
+
 function renderGroups(matches) {
   if (matches.length === 0) {
     groupsEl.innerHTML = '<div class="empty">no matches yet</div>';
     return;
   }
-  // figure out if there are any groups at all. if not, say so.
   const hasGroups = matches.some(m => m.groups.length > 0);
   if (!hasGroups) {
     groupsEl.innerHTML = '<div class="empty">your pattern has no capture groups. wrap part of it in ( ) to capture.</div>';
@@ -75,21 +92,19 @@ function renderGroups(matches) {
   groupsEl.innerHTML = html;
 }
 
-function renderHighlights(text, matches) {
-  if (matches.length === 0) {
-    highlightEl.innerHTML = escapeHtml(text) + '\n';
+function renderExplainer(pattern) {
+  if (!pattern) {
+    explainerEl.innerHTML = '<li class="empty-msg">type a pattern to see it broken down here</li>';
     return;
   }
-  let out = '';
-  let cursor = 0;
-  for (const m of matches) {
-    out += escapeHtml(text.slice(cursor, m.index));
-    out += '<mark class="match">' + escapeHtml(m.text) + '</mark>';
-    cursor = m.index + m.text.length;
+  const tokens = window.RegexExplainer.explain(pattern);
+  if (tokens.length === 0) {
+    explainerEl.innerHTML = '<li class="empty-msg">nothing to explain</li>';
+    return;
   }
-  out += escapeHtml(text.slice(cursor));
-  // trailing newline so the last line gets reserved height
-  highlightEl.innerHTML = out + '\n';
+  explainerEl.innerHTML = tokens.map(t =>
+    '<li><span class="tok">' + escapeHtml(t.tok) + '</span><span class="desc">' + escapeHtml(t.desc) + '</span></li>'
+  ).join('');
 }
 
 function update() {
@@ -104,6 +119,7 @@ function update() {
     matchCountEl.textContent = '0 matches';
     renderHighlights(testEl.value, []);
     renderGroups([]);
+    renderExplainer(patternEl.value);
     return;
   }
 
@@ -116,6 +132,7 @@ function update() {
 
   renderHighlights(text, matches);
   renderGroups(matches);
+  renderExplainer(patternEl.value);
 }
 
 // keep the highlight layer scrolled in lockstep with the textarea
