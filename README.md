@@ -1,5 +1,7 @@
 # regex-test
 
+![](docs/screenshot.png)
+
 a tiny regex tester i built one weekend because i kept tabbing over to regex101 and i wanted something simpler that lived offline. paste a pattern, paste some text, see what it matches and why.
 
 ## what it does
